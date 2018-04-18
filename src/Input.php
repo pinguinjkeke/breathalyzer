@@ -48,9 +48,9 @@ class Input
      */
     private function normalizeInput(string $input): array
     {
-        return array_filter(
+        return array_map('strtoupper', array_filter(
             preg_split('/\s+/', $input)
-        );
+        ));
     }
 
     /**

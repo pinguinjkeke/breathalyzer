@@ -26,6 +26,6 @@ class InputTest extends TestCase
         $data = $input->getInput();
 
         $this->assertCount(2, $data);
-        $this->assertEquals($data, ['helllo', 'wooorld']);
+        $this->assertEquals($data, ['HELLLO', 'WOOORLD']);
     }
 }
