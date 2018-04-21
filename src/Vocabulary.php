@@ -52,4 +52,15 @@ class Vocabulary
     {
         return $this->vocabulary;
     }
+
+    /**
+     * Check if word is exists in Vocabulary.
+     *
+     * @param string $word
+     * @return bool
+     */
+    public function has(string $word): bool
+    {
+        return \in_array(\strtoupper($word), $this->vocabulary, true);
+    }
 }
