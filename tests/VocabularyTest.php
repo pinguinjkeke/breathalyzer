@@ -18,14 +18,18 @@ class VocabularyTest extends TestCase
     }
 
     /** @test */
-    public function it_reads_vocabulary_wo_any_new_lines()
+    public function it_reads_vocabulary_into_map_by_length()
     {
         $vocabulary = $this->initVocabulary();
 
         $data = $vocabulary->getVocabulary();
 
         $this->assertCount(3, $data);
-        $this->assertEquals(['HELLO', 'WORLD', 'HELL'], $data);
+        $this->assertEquals([
+            5 => ['HELLO', 'WORLD'],
+            4 => ['HELL'],
+            6 => ['CREATE'],
+        ], $data);
     }
 
     /** @test */
@@ -38,6 +42,47 @@ class VocabularyTest extends TestCase
 
         $this->assertTrue($exists);
         $this->assertFalse($notExists);
+    }
+
+    /** @test */
+    public function it_calculates_and_returns_minimal_length_of_vocabulary_map()
+    {
+        $vocabulary = $this->initVocabulary();
+
+        $minimalLength = $vocabulary->getMinimalLength();
+
+        $this->assertEquals(4, $minimalLength);
+    }
+
+    /** @test */
+    public function it_returns_empty_array_if_map_by_length_is_not_exists()
+    {
+        $vocabulary = $this->initVocabulary();
+
+        $wordsByLength = $vocabulary->getWordsOfLength(10);
+
+        $this->assertEmpty($wordsByLength);
+    }
+
+    /** @test */
+    public function it_returns_words_by_length()
+    {
+        $vocabulary = $this->initVocabulary();
+
+        $wordsByLength = $vocabulary->getWordsOfLength(5);
+
+        $this->assertCount(2, $wordsByLength);
+        $this->assertEquals(['HELLO', 'WORLD'], $wordsByLength);
+    }
+
+    /** @test */
+    public function it_returns_words_by_length_with_offset()
+    {
+        $vocabulary = $this->initVocabulary();
+
+        $wordsByLength = $vocabulary->getWordsOfLength(5, 1);
+        $this->assertCount(2, $wordsByLength);
+        $this->assertEquals(['HELL', 'CREATE'], $wordsByLength);
     }
 
     private function initVocabulary(): Vocabulary

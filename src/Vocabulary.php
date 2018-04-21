@@ -12,6 +12,9 @@ class Vocabulary
     /** @var array */
     private $vocabulary = [];
 
+    /** @var int */
+    private $minimalLength = PHP_INT_MAX;
+
     /**
      * Vocabulary constructor.
      *
@@ -39,8 +42,45 @@ class Vocabulary
         $file->setFlags(SplFileObject::SKIP_EMPTY | SplFileObject::READ_AHEAD | SplFileObject::DROP_NEW_LINE);
 
         foreach ($file as $line) {
-            $this->vocabulary[] = $line;
+            $length = \strlen($line);
+
+            $this->minimalLength = \min($this->minimalLength, $length);
+
+            if (!\array_key_exists($length, $this->vocabulary)) {
+                $this->vocabulary[$length] = [];
+            }
+
+            $this->vocabulary[$length][] = $line;
         }
+    }
+
+    /**
+     * Get minimal length.
+     *
+     * @return int
+     */
+    public function getMinimalLength(): int
+    {
+        return $this->minimalLength;
+    }
+
+    /**
+     * Returns words of provided length.
+     *
+     * @param int $length
+     * @param int $offset
+     * @return array
+     */
+    public function getWordsOfLength(int $length, int $offset = 0): array
+    {
+        if ($offset !== 0) {
+            return array_merge(
+                $this->vocabulary[$length - $offset] ?? [],
+                $this->vocabulary[$length + $offset] ?? []
+            );
+        }
+
+        return $this->vocabulary[$length] ?? [];
     }
 
     /**
@@ -61,6 +101,12 @@ class Vocabulary
      */
     public function has(string $word): bool
     {
-        return \in_array(\strtoupper($word), $this->vocabulary, true);
+        $length = \strlen($word);
+
+        if (!\array_key_exists($length, $this->vocabulary)) {
+            return false;
+        }
+
+        return \in_array(\strtoupper($word), $this->vocabulary[$length], true);
     }
 }
