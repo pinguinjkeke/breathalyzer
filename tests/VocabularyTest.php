@@ -55,6 +55,16 @@ class VocabularyTest extends TestCase
     }
 
     /** @test */
+    public function it_calculates_and_returns_maximal_length_of_vocabulary_map()
+    {
+        $vocabulary = $this->initVocabulary();
+
+        $maximalLength = $vocabulary->getMaximalLength();
+
+        $this->assertEquals(6, $maximalLength);
+    }
+
+    /** @test */
     public function it_returns_empty_array_if_map_by_length_is_not_exists()
     {
         $vocabulary = $this->initVocabulary();

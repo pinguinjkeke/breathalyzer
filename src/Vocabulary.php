@@ -15,6 +15,9 @@ class Vocabulary
     /** @var int */
     private $minimalLength = PHP_INT_MAX;
 
+    /** @var int */
+    private $maximalLength = 0;
+
     /**
      * Vocabulary constructor.
      *
@@ -45,6 +48,7 @@ class Vocabulary
             $length = \strlen($line);
 
             $this->minimalLength = \min($this->minimalLength, $length);
+            $this->maximalLength = \max($this->maximalLength, $length);
 
             if (!\array_key_exists($length, $this->vocabulary)) {
                 $this->vocabulary[$length] = [];
@@ -62,6 +66,16 @@ class Vocabulary
     public function getMinimalLength(): int
     {
         return $this->minimalLength;
+    }
+
+    /**
+     * Get maximal length.
+     *
+     * @return int
+     */
+    public function getMaximalLength(): int
+    {
+        return $this->maximalLength;
     }
 
     /**

@@ -71,7 +71,10 @@ class Breathalyzer
         // This value stands for Infinity.
         $score = PHP_INT_MAX;
 
-        $length = \max(\strlen($word), $this->vocabulary->getMinimalLength());
+        $length = \min(
+            \max(\strlen($word), $this->vocabulary->getMinimalLength()),
+            $this->vocabulary->getMaximalLength()
+        );
         $vocabulary = $this->vocabulary->getWordsOfLength($length);
         $offset = 0;
 
